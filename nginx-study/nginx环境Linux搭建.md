@@ -55,4 +55,30 @@ sbin/nginx -s stop # 强制终止Nginx，不管当前是否有任务在执行
 [root@localhost] firewall-cmd --reload  
 [root@localhost] firewall-cmd --zone=public --list-ports 
 
+#在Windows/Mac的浏览器中，直接输入刚刚配置的IP地址访问Nginx： 最终看到如上的Nginx欢迎界面，代表Nginx安装完成
+
+
+
+#配置nginx 开机自启动
+cd /lib/systemd/system/
+
+touch nginx.service
+vim nginx.service
+#-------
+[Unit]
+Description=nginx service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+ExecReload=/usr/local/nginx/sbin/nginx -s reload
+ExecStop=/usr/local/nginx/sbin/nginx -s quit
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+#--------
+
+
 ```
